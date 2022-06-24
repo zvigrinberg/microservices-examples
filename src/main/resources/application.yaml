@@ -1,9 +1,20 @@
-
-microservices:
-  - ordersMicroservice:
-      urlWithPort: localhost:8081
-      Endpoints:
-        - get: /order/productInstanceId
 spring:
   application:
     name: demo-distributed-microservices
+
+microservices:
+  ordersPosition: 0
+  cachingPosition: 1
+- ordersMicroservice:
+    urlWithPort: ${SERVER_PORT_ORDERS:localhost:8081}
+    endpoints:
+      common: /orders
+      get:
+      getAll:
+      post:
+- cachingMicroservice:
+    urlWithPort: ${SERVER_PORT_CACHING:localhost:8082}
+    endpoints:
+      get: /caching
+
+

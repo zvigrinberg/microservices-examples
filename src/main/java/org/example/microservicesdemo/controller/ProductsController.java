@@ -26,7 +26,7 @@ public class ProductsController {
     }
 
     @GetMapping
-    public List<ProductInstance> getAllProducts()
+    public List<ProductInstanceDto> getAllProducts()
     {
         return null;
     }

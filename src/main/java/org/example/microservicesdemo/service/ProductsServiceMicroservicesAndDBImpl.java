@@ -3,24 +3,26 @@ package org.example.microservicesdemo.service;
 import lombok.RequiredArgsConstructor;
 import org.example.microservicesdemo.domain.Product;
 import org.example.microservicesdemo.domain.ProductInstanceDto;
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.example.microservicesdemo.utils.PropertiesHelper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
 
     private final RestTemplate restTemplate;
-    @ConfigurationProperties
+    private final PropertiesHelper propertiesHelper;
+
 
     @Override
     public ProductInstanceDto getProductByOrder(String orderNumber) {
-         String productInstanceId = invokeOrdersMSForGet(orderNumber);
-
-
+        ProductInstanceDto productInstanceDto = new ProductInstanceDto();
+         Map response = invokeOrdersMSForGet(orderNumber);
+         return productInstanceDto;
     }
 
 
@@ -30,7 +32,9 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
     }
 
 
-    private String invokeOrdersMSForGet(String orderNumber) {
-        restTemplate.getForEntity()
+    private Map invokeOrdersMSForGet(String orderNumber) {
+        ResponseEntity<Map> responseBody = restTemplate.getForEntity(propertiesHelper.returnUrlOrders() + "/" + orderNumber, Map.class);
+        Map body = responseBody.getBody();
+        return body;
     }
 }
