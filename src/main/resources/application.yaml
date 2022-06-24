@@ -1,0 +1,9 @@
+
+microservices:
+  - ordersMicroservice:
+      urlWithPort: localhost:8081
+      Endpoints:
+        - get: /order/productInstanceId
+spring:
+  application:
+    name: demo-distributed-microservices
