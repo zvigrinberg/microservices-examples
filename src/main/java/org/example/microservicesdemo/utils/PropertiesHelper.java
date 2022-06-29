@@ -8,20 +8,21 @@ import java.util.List;
 
 @Component
 @Data
-@ConfigurationProperties(prefix = "microservices")
+@ConfigurationProperties(prefix = "microservices",ignoreUnknownFields = true)
 public class PropertiesHelper {
     public static final String SINGLE_GET = "get";
     public static final String GET_ALL = "getAll";
     public static final String POST = "post";
     public static final String COMMON = "common";
-    private Integer ordersPosition;
-    private Integer cachingPosition;
+    public static final Integer ORDERS_MS_POSITION = 0;
+    public static final Integer CACHE_MS_POSITION = 1;
+    ;
     private List<MicroServiceEntry> msList;
 
     public String returnUrlOrders()
     {
-        String baseUrl =  msList.get(ordersPosition).getUrlWithPort();
-        String path = msList.get(ordersPosition).getEndpoints().get(COMMON);
+        String baseUrl =  msList.get(ORDERS_MS_POSITION).getUrlWithPort();
+        String path = msList.get(ORDERS_MS_POSITION).getEndpoints().get(COMMON);
         boolean securedIndication=false;
         securedIndication = isSecuredEndpoint(baseUrl, securedIndication);
         return composeUrl(baseUrl,path,securedIndication);
@@ -30,8 +31,8 @@ public class PropertiesHelper {
 
     public String returnUrlCaching()
     {
-        String baseUrl =  msList.get(cachingPosition).getUrlWithPort();
-        String path = msList.get(ordersPosition).getEndpoints().get(SINGLE_GET);
+        String baseUrl =  msList.get(CACHE_MS_POSITION).getUrlWithPort();
+        String path = msList.get(CACHE_MS_POSITION).getEndpoints().get(SINGLE_GET);
         boolean securedIndication=false;
         securedIndication = isSecuredEndpoint(baseUrl, securedIndication);
 

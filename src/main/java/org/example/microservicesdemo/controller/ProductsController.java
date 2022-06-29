@@ -1,11 +1,11 @@
 package org.example.microservicesdemo.controller;
 
 import org.example.microservicesdemo.domain.Product;
-import org.example.microservicesdemo.domain.ProductInstance;
 import org.example.microservicesdemo.domain.ProductInstanceDto;
 import org.example.microservicesdemo.service.ProductsService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -32,7 +32,7 @@ public class ProductsController {
     }
 
     @PostMapping
-    public ProductInstanceDto orderProduct(@RequestBody Product product, @RequestParam String customerId, @RequestParam String customerName)
+    public ProductInstanceDto orderProduct(@Valid @RequestBody Product product, @RequestParam String customerId, @RequestParam String customerName)
     {
         return productsService.processOrder(product,customerId,customerName);
     }

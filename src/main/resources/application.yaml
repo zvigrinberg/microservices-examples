@@ -1,20 +1,32 @@
+server:
+  port: ${SERVER_PORT:8080}
+#  servlet:
+#    context-path: /orders-management/orders-api/v1
 spring:
   application:
-    name: demo-distributed-microservices
+    name: demo-microservice1
+  jpa:
+    database: postgresql
+    show-sql: ${SHOW_SQL_COMMANDS:true}
+    generate-ddl: ${GENERATE_DDL:true}
+  datasource:
+    url: ${JPA_DATASOURCE_URL:jdbc:postgresql://localhost:5432/orders}
+    password: ${DB_PASSWORD:mysecretpassword}
+    hikari:
+      username: ${DB_USERNAME:postgres}
+
+
 
 microservices:
-  ordersPosition: 0
-  cachingPosition: 1
 - ordersMicroservice:
     urlWithPort: ${SERVER_PORT_ORDERS:localhost:8081}
     endpoints:
-      common: /orders
+      common: /orders-management/orders-infra/v1/order
       get:
       getAll:
       post:
 - cachingMicroservice:
-    urlWithPort: ${SERVER_PORT_CACHING:localhost:8082}
+    urlWithPort: ${SERVER_PORT_CACHING:localhost:8081}
     endpoints:
-      get: /caching
-
+      get: /orders-management/orders-caching/v1/caching
 
