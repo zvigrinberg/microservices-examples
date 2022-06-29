@@ -21,9 +21,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.annotation.PostConstruct;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -34,14 +36,39 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
     private final PropertiesHelper propertiesHelper;
     private final ProductsRepository productsRepository;
     private final ProductInstancesRepository productInstancesRepository;
-    private ObjectMapper om = new ObjectMapper();
+    private ObjectMapper om ;
 
 
     @Override
     public ProductInstanceDto getProductByOrder(String orderNumber) {
-        ProductInstanceDto productInstanceDto = new ProductInstanceDto();
+        ProductInstanceDto productInstanceDto=null;
+        ProductInstance productInstance=null;
          Map response = invokeOrdersMSForGet(orderNumber);
-         return productInstanceDto;
+        String orderStatus = (String)response.get("orderStatus");
+        String productCode = (String)response.get("productCode");
+        String productSN = (String)response.get("productSN");
+        String key = productCode + ":" + productSN;
+        Optional<ProductInstance> optional = productInstancesRepository.findById(key);
+        if(optional.isPresent())
+        {
+            productInstance = optional.get();
+
+        }
+        try {
+            String parentClass = om.writeValueAsString(productInstance);
+            productInstanceDto = om.readValue(parentClass, ProductInstanceDto.class);
+            productInstanceDto.setOrderNumber(orderNumber);
+            productInstanceDto.setOrderStatus(OrderStatus.valueOf(orderStatus));
+            ResponseEntity<Map> resp = restTemplate.getForEntity(propertiesHelper.returnUrlCaching() + "/" + productInstanceDto.getProductCode(), Map.class);
+            String productDescription = (String)resp.getBody().get("productDescription");
+            productInstanceDto.setProductDescription(productDescription);
+
+
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return productInstanceDto;
     }
 
 
@@ -72,10 +99,6 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
         responseBody = restTemplate.getForEntity(propertiesHelper.returnUrlCaching() + "/" + product.getProductCode() , Map.class);
         Map body = responseBody.getBody();
         productInstanceDto.setProductDescription((String)body.get("productDescription"));
-        om.configure(JsonParser.Feature.IGNORE_UNDEFINED,true);
-        om.configure(JsonGenerator.Feature.IGNORE_UNKNOWN,true);
-        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        om.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
 
         try {
             String dto = om.writeValueAsString(productInstanceDto);
@@ -96,5 +119,15 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
         ResponseEntity<Map> responseBody = restTemplate.getForEntity(propertiesHelper.returnUrlOrders() + "/" + orderNumber, Map.class);
         Map body = responseBody.getBody();
         return body;
+    }
+
+    @PostConstruct
+    public void initializeObjectMapper()
+    {
+        om = new ObjectMapper();
+        om.configure(JsonParser.Feature.IGNORE_UNDEFINED,true);
+        om.configure(JsonGenerator.Feature.IGNORE_UNKNOWN,true);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        om.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
     }
 }

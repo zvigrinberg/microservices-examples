@@ -11,7 +11,6 @@ import javax.persistence.OneToMany;
 @NoArgsConstructor
 @Data
 @Entity
-
 public class Product {
     @Id
     private String productCode;

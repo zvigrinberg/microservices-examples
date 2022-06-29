@@ -21,14 +21,13 @@
 {
     "request": {
       "method": "GET",
-      "urlPathPattern": "/orders-management/orders-infra/v1/order/[a-z0-9]*"
+      "urlPathPattern": "/orders-management/orders-infra/v1/order/[a-zA-Z0-9-]*"
     },
     "response": {
        "status": 200,
        "jsonBody": {
-         "orderNumber": "LOMK-91743899",
          "orderStatus": "APPROVED",
-         "productCode": "1AB",
+         "productCode": "ab105",
          "productSN": "fdskjf-34hfg4-hs811lj-pklowranb"
        },
       "headers": {

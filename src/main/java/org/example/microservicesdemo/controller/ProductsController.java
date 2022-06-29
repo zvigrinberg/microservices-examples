@@ -1,5 +1,6 @@
 package org.example.microservicesdemo.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.example.microservicesdemo.domain.Product;
 import org.example.microservicesdemo.domain.ProductInstanceDto;
 import org.example.microservicesdemo.service.ProductsService;
@@ -9,15 +10,11 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 public class ProductsController {
 
-    private ProductsService productsService;
-
-
-    public ProductsController(ProductsService productsService) {
-        this.productsService = productsService;
-    }
+    private final ProductsService productsService;
 
     @GetMapping("/{orderNumber}")
     public ProductInstanceDto getProductByOrder(@PathVariable String orderNumber)

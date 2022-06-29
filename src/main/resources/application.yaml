@@ -9,11 +9,17 @@ spring:
     database: postgresql
     show-sql: ${SHOW_SQL_COMMANDS:true}
     generate-ddl: ${GENERATE_DDL:true}
+#    properties:
+#      enable_lazy_load_no_trans: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
   datasource:
     url: ${JPA_DATASOURCE_URL:jdbc:postgresql://localhost:5432/orders}
     password: ${DB_PASSWORD:mysecretpassword}
     hikari:
       username: ${DB_USERNAME:postgres}
+    driver-class-name: org.postgresql.Driver
 
 
 
