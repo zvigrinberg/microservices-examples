@@ -3,6 +3,7 @@ package org.example.microservicesdemo.service;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +55,7 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
         httpHeaders.add("Accept","application/json");
         RequestEntity requestEntity = new RequestEntity(product,httpHeaders, HttpMethod.POST, URI.create(propertiesHelper.returnUrlOrders() + "/"));
         Map<String, String> customerDetails = Map.of("customerId", customerId, "customerName", customerName);
-        ResponseEntity<Map> responseBody = restTemplate.postForEntity(propertiesHelper.returnUrlOrders() + "/",requestEntity,Map.class,customerDetails);
+        ResponseEntity<Map> responseBody = restTemplate.postForEntity(propertiesHelper.returnUrlOrders() ,requestEntity,Map.class,customerDetails);
         Map respBody = responseBody.getBody();
         ProductInstanceDto productInstanceDto = new ProductInstanceDto();
         productInstanceDto.setCustomerId(customerId);
@@ -67,10 +68,15 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
         productInstanceDto.setGrantedPrice((Double.parseDouble((String)respBody.get("grantedPrice"))));
         productInstanceDto.setCategory(product.getCategory());
         productInstanceDto.setMarketPrice(product.getMarketPrice());
+        productInstanceDto.setProductSN((String)respBody.get("productSN"));
         responseBody = restTemplate.getForEntity(propertiesHelper.returnUrlCaching() + "/" + product.getProductCode() , Map.class);
         Map body = responseBody.getBody();
         productInstanceDto.setProductDescription((String)body.get("productDescription"));
         om.configure(JsonParser.Feature.IGNORE_UNDEFINED,true);
+        om.configure(JsonGenerator.Feature.IGNORE_UNKNOWN,true);
+        om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        om.configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false);
+
         try {
             String dto = om.writeValueAsString(productInstanceDto);
             ProductInstance productInstance = om.readValue(dto, ProductInstance.class);

@@ -1,7 +1,7 @@
 server:
   port: ${SERVER_PORT:8080}
-#  servlet:
-#    context-path: /orders-management/orders-api/v1
+  servlet:
+    context-path: /orders-management/orders-api/v1
 spring:
   application:
     name: demo-microservice1
@@ -18,15 +18,14 @@ spring:
 
 
 microservices:
-- ordersMicroservice:
-    urlWithPort: ${SERVER_PORT_ORDERS:localhost:8081}
-    endpoints:
-      common: /orders-management/orders-infra/v1/order
-      get:
-      getAll:
-      post:
-- cachingMicroservice:
-    urlWithPort: ${SERVER_PORT_CACHING:localhost:8081}
-    endpoints:
-      get: /orders-management/orders-caching/v1/caching
+  mslist:
+#  - ordersMicroservice:
+  - urlWithPort: ${SERVER_PORT_ORDERS:localhost:8081}
+    common: /orders-management/orders-infra/v1/order
+    get:
+    getAll:
+    post:
+#  - cachingMicroservice:
+  - urlWithPort: ${SERVER_PORT_CACHING:localhost:8081}
+    get: /orders-management/orders-caching/v1/caching
 

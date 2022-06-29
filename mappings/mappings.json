@@ -10,35 +10,44 @@
   "jsonBody": {
     "orderNumber": "LOMK-91743899",
     "orderStatus": "ORDERED",
-    "grantedPrice": "45,000.00",
+    "grantedPrice": "45000.00",
     "productSN": "fdskjf-34hfg4-hs811lj-pklowranb"
+  },
+  "headers": {
+    "content-type": "application/json"
   }
  }
 },
 {
     "request": {
       "method": "GET",
-      "url": "/orders-management/orders-infra/v1/order/([a-z0-9]*)"
+      "urlPathPattern": "/orders-management/orders-infra/v1/order/[a-z0-9]*"
     },
     "response": {
        "status": 200,
        "jsonBody": {
-        "orderNumber": "LOMK-91743899",
-        "orderStatus": "APPROVED",
-        "productCode": "1AB",
-        "productSN": "fdskjf-34hfg4-hs811lj-pklowranb"
+         "orderNumber": "LOMK-91743899",
+         "orderStatus": "APPROVED",
+         "productCode": "1AB",
+         "productSN": "fdskjf-34hfg4-hs811lj-pklowranb"
+       },
+      "headers": {
+         "content-type": "application/json"
       }
     }
 },
   {
     "request": {
       "method": "GET",
-      "url": "/orders-management/orders-caching/v1/caching/([a-z0-9]*)"
+      "urlPathPattern": "/orders-management/orders-caching/v1/caching/([a-zA-Z0-9]+)"
     },
     "response": {
       "status": 200,
       "jsonBody": {
         "productDescription": "Wing Piano"
+      },
+      "headers": {
+        "content-type": "application/json"
       }
     }
   }
