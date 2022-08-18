@@ -39,7 +39,7 @@ node {
                     }
                     catch (Exception e)
                     {
-                        echo e.toString() + "continue with pipeline"
+                        echo e.toString() + ", continue with pipeline"
                     }
                     unstash 'gitRepo'
                     stage('Run Unit-test')
@@ -87,35 +87,29 @@ node {
 
             stage('Authenticate to Helm Registry')
                     {
-                        node('jenkins-agent-helm') {
-                            withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
-                                loginToRegistry(registryServer, (String) USER, (String) PASSWORD)
-                            }
+                        withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                            loginToRegistry(registryServer, (String) USER, (String) PASSWORD)
                         }
+
                     }
             stage('Push the chart to Registry') {
-                node('jenkins-agent-helm') {
                     def output = sh(script: "helm push ${packedChartFileFinal} ${registryServerUrl} ; cd ..", returnStdout: true).trim()
-                }
             }
 
             //Deploy to cluster in a temporary namespace with CI values.yaml,  appropriate for integration testing
             stage('Deploy Application to OCP Cluster')
                     {
-                        node('jenkins-agent-helm') {
-                            loginToOcpCluster((String) clusterAddress, (String) ocpToken, (String) caLocation)
+                      loginToOcpCluster((String) clusterAddress, (String) ocpToken, (String) caLocation)
                             //def output = sh(script: "cd infinity-ms ; helm install . infinity-ms-test -f values-ci.yaml ; cd ..", returnStdout: true).trim()
 //                    call(String releaseName, String chartFileName, String releaseNamespace, String valuesPath, String secretValuesPath,  boolean enableDebug, boolean injectSideCars,boolean openshiftCluster)
-                            helmInstall(applicationName, packedChartFileFinal, applicationName + "-test", "helm/values-ci.yaml", "", true, true, true)
-                        }
+                      helmInstall(applicationName, packedChartFileFinal, applicationName + "-test", "helm/values-ci.yaml", "", true, true, true)
+
                     }
             //Here is the place to implement integration test, using helm test command, or with any other testing framework or tool, like JUnit, cucumber testing, and etc.
             //Preferably to be used with conjunction of build tools like maven/gradle.
             stage('Test Deployment- Integration Test')
                     {
-                        node('jenkins-agent-helm') {
-                            helm.test(applicationName, applicationName + "-test")
-                        }
+                      helm.test(applicationName, applicationName + "-test")
                     }
         }
              //TBD
