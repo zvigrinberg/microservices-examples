@@ -3,13 +3,14 @@
 node {
 
     echo "Start of CI Helm chart pipeline!!"
-
+    def DOCKER_HOME = tool name: 'docker-latest', type: 'dockerTool'
     def gitBranch = "${env.BRANCH_NAME}"
     def buildNumber = "${env.BUILD_NUMBER}"
     def cdRepo  = "${params.GITOPS_CD_REPO}" //git@github.com:zvigrinberg/gitops-cd-pipeline.git
     def registryProtocol = "oci"
     def registryServer = "quay.io"
     def registryAccount = "zgrinber"
+
     def applicationName = "demo-microservice1"
     def registryServerUrl = "${registryProtocol}://${registryServer}/${registryAccount}"
     def packageChartVersion
@@ -55,16 +56,15 @@ node {
                 }
         stage('Docker Build And Push Application Image')
                 {
-                    docker.withRegistry('https:/quay.io/zgrinber', 'quay-io-registry-credentials') {
-
-                        def customImage = docker.build("${applicationName}:${buildNumber}")
-
-                        /* Push the container to the custom Registry */
-                        customImage.push()
-
-                    }
+                  withEnv(["PATH=${PATH}:${DOCKER_HOME}/bin"])
+                         {
+                             withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                                 sh "docker login -u ${USER} -p ${PASSWORD} ${registryServer}"
+                                 sh "docker build . -t ${registryServer}/${registryAccount}/${applicationName}:${buildNumber}"
+                                 sh "docker push ${imageRegistry}/${applicationName}:${buildNumber}"
+                             }
+                         }
                 }
-
 
 
         //feature/topic branch, needs only to validate parameters, test chart(linting and helm template) , perform a dry-run install
