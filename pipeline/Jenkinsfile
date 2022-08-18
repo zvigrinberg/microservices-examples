@@ -54,18 +54,18 @@ node {
                                sh 'mvn clean install'
                             }
                 }
-        stage('Docker Build And Push Application Image')
+        node('podman-jenkins-agent')
                 {
-                  withEnv(["PATH=${PATH}:${DOCKER_HOME}/bin"])
-                         {
-                             withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
-                                 sh "docker login -u ${USER} -p ${PASSWORD} ${registryServer}"
-                                 sh "docker build . -t ${registryServer}/${registryAccount}/${applicationName}:${buildNumber}"
-                                 sh "docker push ${imageRegistry}/${applicationName}:${buildNumber}"
-                             }
-                         }
+                  unstash 'gitRepo'
+                  stage('Build And Push Application Image')
+                        {
+                          ithCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                                 sh "podman login -u ${USER} -p ${PASSWORD} ${registryServer}"
+                                 sh "podman build . -t ${registryServer}/${registryAccount}/${applicationName}:${buildNumber}"
+                                 sh "podman push ${imageRegistry}/${applicationName}:${buildNumber}"
+                              }
+                        }
                 }
-
 
         //feature/topic branch, needs only to validate parameters, test chart(linting and helm template) , perform a dry-run install
         //and open a pull-request to main branch
