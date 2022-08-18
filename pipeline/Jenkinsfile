@@ -52,14 +52,18 @@ node {
                     stage('Build Application Jar')
                             {
                                sh 'mvn clean install'
+                               stash includes: '/target', name: 'BuiltJar'
+
                             }
                 }
         node('podman-jenkins-agent')
                 {
                   unstash 'gitRepo'
+                  unstash 'BuiltJar'
+
                   stage('Build And Push Application Image')
                         {
-                          ithCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                          withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                                  sh "podman login -u ${USER} -p ${PASSWORD} ${registryServer}"
                                  sh "podman build . -t ${registryServer}/${registryAccount}/${applicationName}:${buildNumber}"
                                  sh "podman push ${imageRegistry}/${applicationName}:${buildNumber}"
