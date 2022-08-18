@@ -176,7 +176,7 @@ node {
     stage('remove tested deployment')
        {
            node('jenkins-agent-helm') {
-               {
+
                    helm.uninstall(applicationName, applicationName + "-test")
                }
            }
