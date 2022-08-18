@@ -34,7 +34,13 @@ node {
                 }
         node('jenkins-agent-mvn')
                 {
-                    sh 'rm /home/jenkins/.m2/settings.xml'
+                    try {
+                        sh 'rm /home/jenkins/.m2/settings.xml'
+                    }
+                    catch (Exception e)
+                    {
+                        echo e.toString() + "continue with pipeline"
+                    }
                     unstash 'gitRepo'
                     stage('Run Unit-test')
                             {
