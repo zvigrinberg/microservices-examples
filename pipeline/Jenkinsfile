@@ -30,12 +30,14 @@ node {
         stage('Git Checkout Branch')
                 {
                     checkout scm
+                    stash includes: '**', name: 'gitRepo', useDefaultExcludes: false
                 }
 
         stage('Run Unit-test')
            {
           node('jenkins-agent-mvn')
                {
+                 unstash 'gitRepo'
                  sh 'mvn clean test'
                 }
            }
@@ -68,6 +70,7 @@ node {
         //and open a pull-request to main branch
         stage('Packing the Chart') {
           node('jenkins-agent-helm'){
+            unstash 'gitRepo'
             def yaml = readYaml file: 'helm/Chart.yaml'
             def chartVersion = yaml.version
             def chartName = yaml.name
