@@ -9,7 +9,7 @@ node {
     def cdRepo  = "${params.GITOPS_CD_REPO}" //git@github.com:zvigrinberg/gitops-cd-pipeline.git
     def registryProtocol = "oci"
     def registryServer = "quay.io"
-    def registryAccount = "zgrinberg"
+    def registryAccount = "zgrinber"
     def applicationName = "demo-microservice1"
     def registryServerUrl = "${registryProtocol}://${registryServer}/${registryAccount}"
     def packageChartVersion
