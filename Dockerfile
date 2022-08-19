@@ -1,7 +1,7 @@
 FROM docker.io/openjdk:11
 USER root
 
-RUN useradd appuser \
+RUN useradd -u 1001 appuser \
     && mkdir /java-app \
     && chown appuser /java-app
 
