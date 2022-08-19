@@ -52,7 +52,7 @@ node {
                     stage('Build Application Jar')
                             {
                                sh 'mvn clean install'
-                               stash includes: '/target', name: 'BuiltJar'
+                               stash includes: 'target/**', name: 'BuiltJar'
 
                             }
                 }
