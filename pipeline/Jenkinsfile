@@ -92,7 +92,7 @@ node {
             stage('Authenticate to Helm Registry')
                     {
                         withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
-                            loginToRegistry(registryServer, (String) USER, (String) PASSWORD)
+                            loginToOciRegistryHelm(registryServer, (String) USER, (String) PASSWORD)
                         }
 
                     }
