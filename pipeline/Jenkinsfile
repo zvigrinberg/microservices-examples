@@ -66,7 +66,7 @@ node {
                           withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
                                  sh "podman login -u ${USER} -p ${PASSWORD} ${registryServer}"
                                  sh "podman build . -t ${registryServer}/${registryAccount}/${applicationName}:${buildNumber}"
-                                 sh "podman push ${registryServer}/${applicationName}:${buildNumber}"
+                                 sh "podman push ${registryServer}/${registryAccount}/${applicationName}:${buildNumber}"
                               }
                         }
                 }
