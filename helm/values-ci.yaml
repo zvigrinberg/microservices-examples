@@ -25,6 +25,7 @@ serviceAccount:
 
 podAnnotations:
   tests/injectWiremockSideCar: "true"
+  tests/injectPostgresqlSideCar: "true"
 
 podSecurityContext: {}
   # fsGroup: 2000

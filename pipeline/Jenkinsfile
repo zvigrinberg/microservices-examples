@@ -107,6 +107,11 @@ node {
                       helmInstall(applicationName, packedChartFileFinal, applicationName + "-test", "helm/values-ci.yaml", "", true, true, true)
 
                   }
+
+            stage('Prepare Mocks Data')
+                 {
+                     sh(script: "curl -X POST http://${applicationName}:9999/__admin/mappings/import -T ./mappings/mappings.json ", returnStdout: true).trim()
+                 }
             //Here is the place to implement integration test, using helm test command, or with any other testing framework or tool, like JUnit, cucumber testing, and etc.
             //Preferably to be used with conjunction of build tools like maven/gradle.
             stage('Test Deployment- Integration Test')
