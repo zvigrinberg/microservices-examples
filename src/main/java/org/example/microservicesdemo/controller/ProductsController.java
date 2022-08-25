@@ -1,6 +1,7 @@
 package org.example.microservicesdemo.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.microservicesdemo.domain.Product;
 import org.example.microservicesdemo.domain.ProductInstanceDto;
 import org.example.microservicesdemo.service.ProductsService;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/orders")
 public class ProductsController {
@@ -19,6 +21,7 @@ public class ProductsController {
     @GetMapping("/{orderNumber}")
     public ProductInstanceDto getProductByOrder(@PathVariable String orderNumber)
     {
+           log.info("Processing orderNumber: " + orderNumber);
            return productsService.getProductByOrder(orderNumber);
     }
 

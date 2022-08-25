@@ -43,7 +43,9 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
     public ProductInstanceDto getProductByOrder(String orderNumber) {
         ProductInstanceDto productInstanceDto=null;
         ProductInstance productInstance=null;
+         log.info("before invoking Orders MS");
          Map response = invokeOrdersMSForGet(orderNumber);
+        log.info("After invoking Orders MS, response received: " + response.toString() );
         String orderStatus = (String)response.get("orderStatus");
         String productCode = (String)response.get("productCode");
         String productSN = (String)response.get("productSN");
@@ -52,9 +54,15 @@ public class ProductsServiceMicroservicesAndDBImpl implements ProductsService {
         if(optional.isPresent())
         {
             productInstance = optional.get();
+            log.info("After fetching from DB, response received: " + response.toString() );
 
         }
+        else
+        {
+            log.info("Nothing fetched from DB, aborting...." );
+        }
         try {
+
             String parentClass = om.writeValueAsString(productInstance);
             productInstanceDto = om.readValue(parentClass, ProductInstanceDto.class);
             productInstanceDto.setOrderNumber(orderNumber);
