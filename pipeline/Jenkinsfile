@@ -102,7 +102,11 @@ node {
             stage('Deploy Application to OCP Cluster')
                   {
                       loginToOcpCluster((String) clusterAddress, (String) ocpToken, (String) caLocation)
-                      //def output = sh(script: "cd infinity-ms ; helm install . infinity-ms-test -f values-ci.yaml ; cd ..", returnStdout: true).trim()
+                  oc.createNewProject(applicationName + "-test")
+//            def createPullSecret(String secretName , String username, String password, String server, String namespace)
+                   withCredentials([usernamePassword(credentialsId: 'quay-io-registry-credentials', usernameVariable: 'USER', passwordVariable: 'PASSWORD')]) {
+                       oc.createPullSecret("quay-puller", USER, PASSWORD, registryServer,applicationName + "-test")
+                   }
 //                call(String releaseName, String chartFileName, String releaseNamespace, String valuesPath, String secretValuesPath,  boolean enableDebug, boolean injectSideCars,boolean openshiftCluster)
                       helmInstall(applicationName, packedChartFileFinal, applicationName + "-test", "helm/values-ci.yaml", "", true, true, true)
 
@@ -110,12 +114,15 @@ node {
 
             stage('Prepare Mocks Data')
                  {
+//                     def waitForDeployment(String deploymentName,String namespace,String timeoutInSeconds)
+                     oc.waitForDeployment(applicationName, applicationName + "-test")
                      sh(script: "curl -X POST http://${applicationName}:9999/__admin/mappings/import -T ./mappings/mappings.json ", returnStdout: true).trim()
                  }
             //Here is the place to implement integration test, using helm test command, or with any other testing framework or tool, like JUnit, cucumber testing, and etc.
             //Preferably to be used with conjunction of build tools like maven/gradle.
             stage('Test Deployment- Integration Test')
                   {
+
                       helm.test(applicationName, applicationName + "-test")
                   }
           }
