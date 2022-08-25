@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "demo-microservice1.fullname" . }}-test-connection-post"
+  labels:
+    {{- include "demo-microservice1.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-weight": "1"
+spec:
+  containers:
+    - name: curl
+      image: ubi8/ubi:8.5-226
+      command: ["/bin/bash"]
+      args: ["-c", "curl -H 'Content-Type: application/json' -X POST 'http://{{ include "demo-microservice1.fullname" . }}:{{ .Values.service.port }}//orders-management/orders-api/v1/orders?customerId=CUST01842&customerName=JohnDoe' -d '{\"productCode\": \"ab105\", \"productName\": \"Piano\", \"category\": \"Musical Instruments\", \"marketPrice\": \"5500\"}'"]
+  restartPolicy: Never
