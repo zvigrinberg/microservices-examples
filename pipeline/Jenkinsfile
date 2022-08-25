@@ -115,7 +115,7 @@ node {
             stage('Prepare Mocks Data')
                  {
 //                     def waitForDeployment(String deploymentName,String namespace,String timeoutInSeconds)
-                     oc.waitForDeployment(applicationName, applicationName + "-test")
+                     oc.waitForDeployment(applicationName, applicationName + "-test", "60")
                      sh(script: "curl -X POST http://${applicationName}:9999/__admin/mappings/import -T ./mappings/mappings.json ", returnStdout: true).trim()
                  }
             //Here is the place to implement integration test, using helm test command, or with any other testing framework or tool, like JUnit, cucumber testing, and etc.
