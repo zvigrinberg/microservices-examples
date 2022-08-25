@@ -26,12 +26,12 @@ spring:
 microservices:
   mslist:
 #  - ordersMicroservice:
-  - urlWithPort: ${SERVER_PORT_ORDERS:localhost:8081}
+  - urlWithPort: ${SERVER_PORT_ORDERS:localhost:9999}
     common: /orders-management/orders-infra/v1/order
     get:
     getAll:
     post:
 #  - cachingMicroservice:
-  - urlWithPort: ${SERVER_PORT_CACHING:localhost:8081}
+  - urlWithPort: ${SERVER_PORT_CACHING:localhost:9999}
     get: /orders-management/orders-caching/v1/caching
 
