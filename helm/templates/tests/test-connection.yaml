@@ -11,5 +11,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "demo-microservice1.fullname" . }}:{{ .Values.service.port }}/orders-management/orders-api/v1/order/5']
+      args: ['{{ include "demo-microservice1.fullname" . }}:{{ .Values.service.port }}/orders-management/orders-api/v1/orders/5']
   restartPolicy: Never
