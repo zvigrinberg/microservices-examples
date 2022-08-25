@@ -193,6 +193,7 @@ node {
                 node('jenkins-agent-helm') {
 
                   helm.uninstall(applicationName, applicationName + "-test")
+                  oc.deleteProject(applicationName + "-test")
                 }
             }
 
