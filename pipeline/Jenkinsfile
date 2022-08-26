@@ -122,7 +122,7 @@ node {
             //Preferably to be used with conjunction of build tools like maven/gradle.
             stage('Test Deployment- Integration Test')
                   {
-                      String podName = sh(script: "oc get pods -n ${applicationName}-test | grep ${applicationName}  awk '{print \$1}'", returnStdout: true).trim()
+                      String podName = sh(script: "oc get pods -n ${applicationName}-test | grep ${applicationName} | awk '{print \$1}'", returnStdout: true).trim()
                       sh "oc wait --for=condition=Ready pod/${podName}"
                       helm.test(applicationName, applicationName + "-test")
                   }
