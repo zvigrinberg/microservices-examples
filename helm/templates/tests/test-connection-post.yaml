@@ -12,5 +12,5 @@ spec:
     - name: curl
       image: ubi8/ubi:8.5-226
       command: ["/bin/bash"]
-      args: ["-c", "curl -H 'Content-Type: application/json' -X POST 'http://{{ include "demo-microservice1.fullname" . }}:{{ .Values.service.port }}//orders-management/orders-api/v1/orders?customerId=CUST01842&customerName=JohnDoe' -d '{\"productCode\": \"ab105\", \"productName\": \"Piano\", \"category\": \"Musical Instruments\", \"marketPrice\": \"5500\"}'"]
+      args: ["-c", "curl -H 'Content-Type: application/json' -X POST 'http://{{ include "demo-microservice1.fullname" . }}:{{ .Values.service.port }}/orders-management/orders-api/v1/orders?customerId=CUST01842&customerName=JohnDoe' -d '{\"productCode\": \"ab105\", \"productName\": \"Piano\", \"category\": \"Musical Instruments\", \"marketPrice\": \"5500\"}'"]
   restartPolicy: Never
