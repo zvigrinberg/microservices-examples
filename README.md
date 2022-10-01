@@ -2,7 +2,7 @@
 examples of distributed microservices architecture - demonstrating unit test + integration test, as well as logging and tracing, and documentation by OpenAPI/Swagger
 
 ## Spinning up a wiremock mock server instance in container(for testing locally).
-1. Run a wiremock server instance that will be accessible from machinethat runs the container on port 8081
+1. Run a wiremock server instance that will be accessible from machinethat runs the container on port 8080, but from host will be accessible via port 8081
 ```shell
  podman run -d --name wiremock-container   -p 8081:8080  wiremock/wiremock
 ```
