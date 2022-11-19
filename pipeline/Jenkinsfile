@@ -6,7 +6,7 @@ node {
     def DOCKER_HOME = tool name: 'docker-latest', type: 'dockerTool'
     def gitBranch = "${env.BRANCH_NAME}"
     def buildNumber = "${env.BUILD_NUMBER}"
-    def cdRepo = "${params.GITOPS_CD_REPO}" //git@github.com:zvigrinberg/gitops-cd-pipeline.git
+    def cdRepo = "${params.GITOPS_CD_REPO}" //git@github.com:zvigrinberg/gitops-cd-pipeline-jenkins.git
     def registryProtocol = "oci"
     def registryServer = "quay.io"
     def registryAccount = "zgrinber"
