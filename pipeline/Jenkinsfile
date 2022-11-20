@@ -130,6 +130,9 @@ node {
       }
       node('jenkins-agent-mvn')
       {
+          // In order to deploy a sonarqube instance, kindly follow 1 and 2 sections at :
+          // https://github.com/zvigrinberg/Sonarqube-in-pipelines-demo/tree/main/spring-boot-jenkins
+          
           // in order to configure Sonarqube for jenkins, kindly follow this instructions : 
           // https://github.com/zvigrinberg/Sonarqube-in-pipelines-demo/blob/main/spring-boot-jenkins/Jenkins-README.md
           stage('Static Code Analysis with SonarQube')
