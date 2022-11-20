@@ -130,6 +130,8 @@ node {
       }
       node('jenkins-agent-mvn')
       {
+          // in order to configure Sonarqube for jenkins, kindly follow this instructions : 
+          // https://github.com/zvigrinberg/Sonarqube-in-pipelines-demo/blob/main/spring-boot-jenkins/Jenkins-README.md
           stage('Static Code Analysis with SonarQube')
                 {
                     unstash 'gitRepo'
